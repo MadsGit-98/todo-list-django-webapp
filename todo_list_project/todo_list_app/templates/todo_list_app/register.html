@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Nexus</title>
+    <title>Register | Nexus</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'styles/main.css' %}">
-    <link rel="stylesheet" href=" {% static 'styles/login_register.css' %} ">
+    <link rel="stylesheet" href="{% static 'styles/login_register.css' %}">
 </head>
 <body class="min-h-screen">
     <div id="vanta-bg" class="fixed inset-0 -z-10"></div>
@@ -24,43 +24,61 @@
             <a href="" class="text-4xl font-bold futuristic-font glow-text">NEXUS</a>
             <div class="flex space-x-4">
                 <a href="" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
-                    <i data-feather="user-plus" class="mr-2"></i> Register
+                    <i data-feather="log-in" class="mr-2"></i> Login
                 </a>
             </div>
         </header>
 
         <main class="max-w-md mx-auto mt-16">
             <div class="bg-black bg-opacity-50 rounded-xl p-8 glow-box" data-aos="fade-up">
-                <h2 class="text-3xl futuristic-font glow-text mb-6 text-center">Access Your <span class="text-cyan-400">Dashboard</span></h2>
+                <h2 class="text-3xl futuristic-font glow-text mb-6 text-center">Create Your <span class="text-cyan-400">Account</span></h2>
                 
                 {% if form.errors %}
                     <div class="mb-4 p-4 bg-red-900 bg-opacity-50 rounded-md text-red-200">
-                        <p>Your username and password didn't match. Please try again.</p>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ error|escape }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error|escape }}</p>
+                        {% endfor %}
                     </div>
                 {% endif %}
 
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'register' %}">
                     {% csrf_token %}
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <label for="id_username" class="block mb-2 text-sm font-medium text-cyan-400">Username</label>
                         <input type="text" name="username" id="id_username" 
                                class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                required autofocus>
                     </div>
+                    <div class="mb-4">
+                        <label for="id_email" class="block mb-2 text-sm font-medium text-cyan-400">Email</label>
+                        <input type="email" name="email" id="id_email" 
+                               class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
+                               required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="id_password1" class="block mb-2 text-sm font-medium text-cyan-400">Password</label>
+                        <input type="password" name="password1" id="id_password1" 
+                               class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
+                               required>
+                    </div>
                     <div class="mb-8">
-                        <label for="id_password" class="block mb-2 text-sm font-medium text-cyan-400">Password</label>
-                        <input type="password" name="password" id="id_password" 
+                        <label for="id_password2" class="block mb-2 text-sm font-medium text-cyan-400">Confirm Password</label>
+                        <input type="password" name="password2" id="id_password2" 
                                class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                required>
                     </div>
                     <button type="submit" class="w-full px-6 py-3 rounded-md glow-box bg-cyan-600 hover:bg-cyan-700 transition-all duration-300 text-lg font-semibold flex items-center justify-center">
-                        <i data-feather="log-in" class="mr-2"></i> Login
+                        <i data-feather="user-plus" class="mr-2"></i> Register
                     </button>
-                    <input type="hidden" name="next" value="{{ next }}">
                 </form>
 
                 <div class="mt-6 text-center text-sm">
-                    <a href="#" class="text-cyan-400 hover:text-cyan-300 transition-colors duration-300">Forgot password?</a>
+                    <p>Already have an account? <a href="" class="text-cyan-400 hover:text-cyan-300 transition-colors duration-300">Login here</a></p>
                 </div>
             </div>
         </main>
@@ -69,6 +87,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
-    <script src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/register.js' %} "></script>
 </body>
 </html>
