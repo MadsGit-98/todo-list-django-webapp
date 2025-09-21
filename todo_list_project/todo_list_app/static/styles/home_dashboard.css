@@ -1,0 +1,12 @@
+/*
+    task-list.css (or home.css & dashboard.css)
+    These styles are specific to task items.
+*/
+.task-item:hover {
+    background-color: rgba(20, 20, 20, 0.7);
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #666;
+}
