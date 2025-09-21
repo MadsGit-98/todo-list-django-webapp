@@ -5,3 +5,7 @@ from django.shortcuts import render
 # Home Page View 
 def home_view(request):
     return render(request, template_name='todo_list_app/home.html')
+
+# Login Page View 
+def login_view(request):
+    return render(request, template_name='todo_list_app/login.html')
