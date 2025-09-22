@@ -1,0 +1,36 @@
+/*
+    main.css
+    This file contains all the styles common to every page.
+*/
+
+/* Global Styles */
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+}
+
+/* Futuristic Fonts and Effects */
+.futuristic-font {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.glow-text {
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+}
+
+.glow-box {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.glow-box:hover {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.glow-border {
+    border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.glow-border:hover {
+    border: 1px solid rgba(0, 255, 255, 0.7);
+}
