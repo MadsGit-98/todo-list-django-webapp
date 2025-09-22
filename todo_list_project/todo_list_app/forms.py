@@ -1,5 +1,5 @@
-from tkinter import Widget
 from django import forms 
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
 class RegisterForm(forms.Form): 
@@ -75,3 +75,49 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("Password Fields Not Matching!")
 
         return cleaned_data 
+
+class LoginForm(forms.Form):
+    """ Represents a Login Form with username and password. 
+    
+    Attributes: 
+        username(CharField): A character field to represent the created username by the user.
+        password(CharField): A character field to represet the user's password.
+    """
+
+    username = forms.CharField(max_length=64)
+    password = forms.CharField(widget= forms.PasswordInput)
+
+    def clean(self): 
+        """
+        Brief: A method that validate and authenticates a user's login.
+
+        Details: The method authenticates the entered login data,
+                 and raises a validation error in case of failure.
+
+        Args:
+            self
+        """
+        cleaned_data = super().clean()                 # returns a dictionary 
+
+        username = cleaned_data.get("username")
+        password = cleaned_data.get("password")
+
+        # Check if username and password were provided
+        if not username or not password: 
+            return cleaned_data
+
+        # Authenticate User 
+        user = authenticate(username= username, password=password )
+
+        # If authenticate returns nothing then it could not authenticate 
+        if user is None:
+            raise forms.ValidationError(" Wrong username or password! ")
+
+        # We can add the user object to the form for easy access in the views
+        self.user = user 
+
+        return cleaned_data
+
+ 
+
+
