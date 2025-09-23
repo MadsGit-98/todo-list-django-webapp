@@ -118,6 +118,15 @@ class LoginForm(forms.Form):
 
         return cleaned_data
 
+class AddListForm(forms.Form):
+    """ Represents an AddList form with a list name.
+    
+    Attributes: 
+        list_name(CharField): A character field to represent the created username by the user.
+    """
+    list_name = forms.CharField(max_length=100)
+
+
  
 
 

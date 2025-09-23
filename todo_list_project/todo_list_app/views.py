@@ -1,6 +1,8 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
+from django.db.models import Count
 from django.http import request
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, AddListForm
+from .models import ListItem, ToDoList
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 
@@ -71,4 +73,33 @@ def register_view(request):
 
 # Dashboard Page View 
 def dashboard_view(request):
-    return render(request, template_name='todo_list_app/dashboard.html')
+    """
+    Brief: A view method that handles the dashboard view.
+
+    Details: This function handles the addition of a new list to a user within the DB,
+
+    
+    Args:
+        request: The received request.
+    """ 
+    # Handle the Add new List form 
+    if request.method == "POST": 
+        add_list_form = AddListForm(request.POST)
+        if add_list_form.is_valid():
+            if request.user.is_authenticated: 
+                added_list_name = add_list_form.cleaned_data.get("list_name")
+                ToDoList.objects.create(name= added_list_name, user=request.user)
+                return redirect('dashboard')
+            else:
+                return redirect('login') 
+    else:
+        add_list_form = AddListForm() 
+
+    # Viewing all the current lists of a user 
+    lists = ToDoList.objects.filter(user= request.user).annotate(list_items_count=Count('listitem'))
+
+    context= {
+        'add_list_form': add_list_form, 
+        'lists': lists
+        }
+    return render(request, template_name='todo_list_app/dashboard.html', context=context)

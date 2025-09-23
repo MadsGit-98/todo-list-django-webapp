@@ -42,7 +42,7 @@
 
                 <!-- New list form (hidden by default) -->
                 <div id="new-list-form" class="hidden mb-6">
-                    <form method="post" action="">
+                    <form method="post" action="{% url 'dashboard' %}">
                         {% csrf_token %}
                         <div class="flex">
                             <input type="text" name="list_name" placeholder="List name" 
@@ -63,7 +63,7 @@
                                 <a href="" 
                                    class="flex justify-between items-center p-3 rounded-md glow-border hover:bg-gray-900 hover:bg-opacity-50 transition-all duration-300 {% if current_list.id == list.id %}bg-gray-900 bg-opacity-70{% endif %}">
                                     <span>{{ list.name }}</span>
-                                    <span class="text-sm text-gray-400">{{ list.task_set.count }} items</span>
+                                    <span class="text-sm text-gray-400">{{ list.list_items_count }} items</span>
                                 </a>
                             </li>
                         {% empty %}
