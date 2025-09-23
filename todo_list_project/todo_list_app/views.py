@@ -1,10 +1,11 @@
+from pickle import NONE
 from django.contrib.auth import login
 from django.db.models import Count
 from django.http import request
 from .forms import RegisterForm, LoginForm, AddListForm
 from .models import ListItem, ToDoList
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 # Create your views here.
 
@@ -72,7 +73,7 @@ def register_view(request):
     return render(request, template_name='todo_list_app/register.html', context=context)
 
 # Dashboard Page View 
-def dashboard_view(request):
+def dashboard_view(request, list_id=None):
     """
     Brief: A view method that handles the dashboard view.
 
@@ -81,6 +82,7 @@ def dashboard_view(request):
     
     Args:
         request: The received request.
+        list_id: Id of the selected/current list, initially is none.
     """ 
     # Handle the Add new List form 
     if request.method == "POST": 
@@ -100,6 +102,13 @@ def dashboard_view(request):
 
     context= {
         'add_list_form': add_list_form, 
-        'lists': lists
+        'lists': lists,
+        'current_list': None,
         }
+
+    # If a list_id is provided in the URL, fetch the corresponding list and its items
+    if list_id:
+        current_list = get_object_or_404(ToDoList, id=list_id, user=request.user)
+        context['current_list'] = current_list
+
     return render(request, template_name='todo_list_app/dashboard.html', context=context)
