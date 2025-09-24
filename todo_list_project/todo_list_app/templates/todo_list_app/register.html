@@ -23,7 +23,7 @@
         <header class="flex justify-between items-center mb-12">
             <a href="" class="text-4xl font-bold futuristic-font glow-text">NEXUS</a>
             <div class="flex space-x-4">
-                <a href="" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
+                <a href="{% url 'login' %}" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
                     <i data-feather="log-in" class="mr-2"></i> Login
                 </a>
             </div>
@@ -62,13 +62,13 @@
                     </div>
                     <div class="mb-4">
                         <label for="id_password1" class="block mb-2 text-sm font-medium text-cyan-400">Password</label>
-                        <input type="password" name="password1" id="id_password1" 
+                        <input type="password" name="password" id="id_password1" 
                                class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                required>
                     </div>
                     <div class="mb-8">
                         <label for="id_password2" class="block mb-2 text-sm font-medium text-cyan-400">Confirm Password</label>
-                        <input type="password" name="password2" id="id_password2" 
+                        <input type="password" name="confirm_password" id="id_password2" 
                                class="w-full px-4 py-3 bg-gray-900 bg-opacity-70 rounded-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                required>
                     </div>
@@ -78,7 +78,7 @@
                 </form>
 
                 <div class="mt-6 text-center text-sm">
-                    <p>Already have an account? <a href="" class="text-cyan-400 hover:text-cyan-300 transition-colors duration-300">Login here</a></p>
+                    <p>Already have an account? <a href="{% url 'login' %}" class="text-cyan-400 hover:text-cyan-300 transition-colors duration-300">Login here</a></p>
                 </div>
             </div>
         </main>
