@@ -1,4 +1,6 @@
 from django.urls import path
+from django.urls import path, reverse_lazy
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -11,4 +13,5 @@ urlpatterns = [
     path('dashboard/<int:list_id>/', views.dashboard_view, name="add_list_item"),
     path('dashboard/<int:list_id>/<int:task_id>/', views.dashboard_view, name="delete_task"),
     path('dashboard/<int:list_id>/<int:task_id>/', views.dashboard_view, name="toggle_task"), 
+    path('logout/', auth_views.LogoutView.as_view(next_page=reverse_lazy('home')), name='logout'),
 ]

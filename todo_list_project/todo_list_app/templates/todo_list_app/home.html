@@ -27,9 +27,12 @@
                     <a href="{% url 'dashboard' %}" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
                         <i data-feather="home" class="mr-2"></i> Dashboard
                     </a>
-                    <a href="" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
-                        <i data-feather="log-out" class="mr-2"></i> Logout
-                    </a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
+                            <i data-feather="log-out" class="mr-2"></i> Logout
+                        </button>
+                    </form>
                 {% else %}
                     <a href="{% url 'login' %}" class="px-4 py-2 rounded-md glow-box bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 flex items-center">
                         <i data-feather="log-in" class="mr-2"></i> Login

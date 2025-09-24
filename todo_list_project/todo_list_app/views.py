@@ -70,7 +70,7 @@ def register_view(request):
             # Redirect to the dashboard view to start creating To-Do Lists.
             return redirect('dashboard')
     else: 
-        form = RegisterForm()
+        register_form = RegisterForm()
         
     context = {'form': register_form}
     return render(request, template_name='todo_list_app/register.html', context=context)
