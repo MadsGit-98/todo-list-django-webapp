@@ -45,6 +45,7 @@
                     <form method="post" action="{% url 'dashboard' %}">
                         {% csrf_token %}
                         <div class="flex">
+                            <input type="hidden", name="form_type", value="add_list" >
                             <input type="text" name="list_name" placeholder="List name" 
                                    class="flex-grow px-4 py-2 bg-gray-900 bg-opacity-70 rounded-l-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                    required>
@@ -79,8 +80,9 @@
                     <div class="bg-black bg-opacity-50 rounded-xl p-6 glow-box mb-8">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-2xl futuristic-font glow-text">{{ current_list.name }}</h2>
-                            <form method="post" action="">
+                            <form method="post" action="{% url 'delete_list' current_list.id %}">
                                 {% csrf_token %}
+                                <input type="hidden" name="form_type" value="delete_list">
                                 <button type="submit" class="p-2 rounded-full glow-box bg-red-900 hover:bg-red-800 transition-all duration-300" onclick="return confirm('Are you sure you want to delete this list?')">
                                     <i data-feather="trash-2"></i>
                                 </button>
