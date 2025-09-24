@@ -8,4 +8,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name="dashboard"),
     path('dashboard/<int:list_id>/', views.dashboard_view, name="view_list_items"),
     path('dashboard/<int:list_id>/', views.dashboard_view, name="delete_list"),
+    path('dashboard/<int:list_id>/', views.dashboard_view, name="add_list_item"),
+    path('dashboard/<int:list_id>/<int:task_id>/', views.dashboard_view, name="delete_task"),
+    path('dashboard/<int:list_id>/<int:task_id>/', views.dashboard_view, name="toggle_task"), 
 ]

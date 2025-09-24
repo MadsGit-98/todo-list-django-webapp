@@ -90,10 +90,11 @@
                         </div>
 
                         <!-- Add new task form -->
-                        <form method="post" action="" class="mb-8">
+                        <form method="post" action="{% url 'add_list_item' current_list.id %}" class="mb-8">
                             {% csrf_token %}
                             <div class="flex">
-                                <input type="text" name="task_text" placeholder="Add a new task..." 
+                                <input type="hidden",  name="form_type", value="add_list_item">
+                                <input type="text" name="list_item_text" placeholder="Add a new task..." 
                                        class="flex-grow px-4 py-3 bg-gray-900 bg-opacity-70 rounded-l-md glow-border input-glow focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
                                        required>
                                 <button type="submit" class="px-6 py-3 rounded-r-md glow-box bg-cyan-600 hover:bg-cyan-700 transition-all duration-300">
@@ -104,12 +105,13 @@
 
                         <!-- Tasks list -->
                         <div class="space-y-3">
-                            {% for task in current_list.task_set.all %}
+                            {% for task in current_list.listitem_set.all %}
                                 <div class="flex items-center p-4 rounded-md glow-border task-item transition-all duration-300 {% if task.completed %}bg-gray-900 bg-opacity-30{% endif %}">
-                                    <form method="post" action="{% url 'toggle_task' task.id %}" class="mr-3">
+                                    <form method="post" action="{% url 'toggle_task' current_list.id task.id %}" class="mr-3">
                                         {% csrf_token %}
+                                        <input type="hidden" name="form_type" value="toggle_task">
                                         <button type="submit" class="p-1 rounded-full glow-border hover:bg-gray-800 transition-all duration-300">
-                                            {% if task.completed %}
+                                            {% if task.isCompleted %}
                                                 <i data-feather="check-circle" class="text-green-400"></i>
                                             {% else %}
                                                 <i data-feather="circle" class="text-gray-400"></i>
@@ -117,8 +119,9 @@
                                         </button>
                                     </form>
                                     <span class="flex-grow {% if task.completed %}completed{% endif %}">{{ task.text }}</span>
-                                    <form method="post" action="{% url 'delete_task' task.id %}">
+                                    <form method="post" action="{% url 'delete_task' current_list.id task.id %}">
                                         {% csrf_token %}
+                                        <input type="hidden", name="form_type", value="delete_task">
                                         <button type="submit" class="p-1 rounded-full hover:bg-gray-800 transition-all duration-300 text-red-400">
                                             <i data-feather="trash-2"></i>
                                         </button>

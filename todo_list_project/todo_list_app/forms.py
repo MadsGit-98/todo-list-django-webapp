@@ -126,6 +126,14 @@ class AddListForm(forms.Form):
     """
     list_name = forms.CharField(max_length=100)
 
+class AddListItemForm(forms.Form): 
+    """ Represents an AddListItem form with a list item name.
+    
+    Attributes: 
+        list_item_text(CharField): A character field to represent the list item's text.
+    """
+    list_item_text = forms.CharField(max_length=100)
+
 
 
 
