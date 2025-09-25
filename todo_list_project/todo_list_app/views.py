@@ -1,9 +1,6 @@
-from pickle import NONE
-from pydoc import text
 from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models import Count
-from django.http import request
 from .forms import RegisterForm, LoginForm, AddListForm, AddListItemForm
 from django.contrib.auth.decorators import login_required
 from .models import ListItem, ToDoList
