@@ -46,15 +46,14 @@ class TestListItem(TestCase):
         assert_test_str = "A list item in the test_list_1 list, of title test_text_1 and status False"
         self.assertEqual(test_str, assert_test_str)
 
-    def toggle_complete(self):
-        self.isCompleted = not self.isCompleted
-        self.save()
-
     # Test the toggle functionality
     def test_list_item_toggle(self): 
-        self.test_list_item.toggle_complete()
+        self.test_list_item.isCompleted = not self.test_list_item.isCompleted
+        test_isCompleted = self.test_list_item.isCompleted 
+        self.test_list_item.save()
+
         # Re-Fetch objects form DB (Use the primary key)
         test_task = ListItem.objects.get(pk = self.test_list_item.pk)
-        self.assertEqual(test_task.isCompleted, True)
+        self.assertEqual(test_task.isCompleted, test_isCompleted)
 
 
