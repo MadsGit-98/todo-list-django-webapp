@@ -14,6 +14,9 @@ class ToDoList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
 
+    def __str__(self): 
+        return f"A To-Do List for the user: {self.user.username}, and title: {self.name}"
+
 # List Items Class
 class ListItem(models.Model):
     """ Represents a List Item with a containing list, text and status
@@ -26,4 +29,7 @@ class ListItem(models.Model):
     list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
     text = models.CharField(max_length=100)
     isCompleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"A list item in the {self.list.name} list, of title {self.text} and status {self.isCompleted}" 
 
