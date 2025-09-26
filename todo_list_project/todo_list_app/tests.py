@@ -440,3 +440,16 @@ class TestSecurity(TestCase):
         response = self.client.get(path=reverse(viewname='view_list_items', kwargs=reverse_kwargs))
 
         self.assertEqual(response.status_code, 404)
+
+    # Test unauthenticated access 
+    def test_unauthenticated_dashboard_access(self):
+        # Ensure that the client is logged out     
+        self.client.logout()
+
+        # Try access the dashboard while logged out 
+        response = self.client.get(path=reverse('dashboard'))
+
+        self.assertEqual(response.status_code, 302)
+        
+        # (Bonus check: The browser is sent to the login page)
+        self.assertIn(reverse('login'), response.url) 
