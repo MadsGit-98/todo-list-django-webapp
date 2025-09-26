@@ -1,7 +1,13 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from selenium.webdriver.ie.webdriver import WebDriver
 from .models import ToDoList, ListItem
+from django.contrib.staticfiles.testing import LiveServerTestCase
+from selenium.webdriver.common.by import By
+from selenium import webdriver 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Create your tests here.
 
@@ -336,3 +342,114 @@ class TestLoginView(TestCase):
         # Assert HTTP status code
         self.assertEqual(response.status_code, 200)
 
+
+class UserJourneyText(LiveServerTestCase): 
+
+    # setUp Method 
+    def setUp(self): 
+        options = webdriver.ChromeOptions()
+        options.add_argument("--start-maximized")
+         
+        self.web_driver = webdriver.Chrome(options= options)
+        self.wait = WebDriverWait(self.web_driver, 10)
+
+    # tearDown Method 
+    def tearDown(self): 
+        self.web_driver.quit()
+
+    # Test the full registeration flow 
+    def test_full_registeration_and_login(self): 
+        # Navigate to the home page from the bas URL   
+        self.web_driver.get(url=f"{self.live_server_url}")
+
+        # Get the regiter element by text  
+        register_element = self.web_driver.find_element(by=By.LINK_TEXT, value="Register")
+
+        # Click the link
+        register_element.click()
+
+        register_page_url = self.live_server_url + reverse('register')
+        self.assertEqual(self.web_driver.current_url, register_page_url )
+
+        # Access the form input fields 
+        form_reg_username_element = self.web_driver.find_element(by=By.ID, value="id_username")
+        form_reg_email_element = self.web_driver.find_element(by=By.ID, value="id_email")
+        form_reg_pswd_element = self.web_driver.find_element(by=By.ID, value="id_password1")
+        form_reg_confirm_pswd_element = self.web_driver.find_element(by=By.ID, value="id_password2")
+
+        # Accessing the button element 
+        form_register_btn = self.web_driver.find_element(by=By.TAG_NAME, value="button")
+
+        # Fill in the form programaticaly 
+        form_reg_username_element.send_keys("Dummy-User-Name")
+        form_reg_email_element.send_keys("dummy@gmail.com")
+        form_reg_pswd_element.send_keys("12345678")
+        form_reg_confirm_pswd_element.send_keys("12345678")
+
+        # Pressing the register button 
+        form_register_btn.click()
+        
+        # Check landing to login page 
+        login_page_url = self.live_server_url + reverse('login')
+        self.wait.until(EC.url_to_be(login_page_url))
+        self.assertEqual(self.web_driver.current_url, login_page_url )
+
+        form_log_username_element = self.web_driver.find_element(by=By.ID, value="id_username")
+        form_log_pswd_element = self.web_driver.find_element(by=By.ID, value="id_password")
+        form_login_btn = self.web_driver.find_element(by=By.TAG_NAME, value="button")
+
+        # Fill in the form
+        form_log_username_element.send_keys("Dummy-User-Name")
+        form_log_pswd_element.send_keys("12345678")
+
+        # press the login btn
+        form_login_btn.click()
+
+        dashboard_page_url = self.live_server_url + reverse('dashboard')
+        self.wait.until(EC.url_to_be(dashboard_page_url))
+        self.assertEqual(self.web_driver.current_url, dashboard_page_url)
+
+class TestSecurity(TestCase): 
+
+    # setUp Method 
+    def setUp(self):
+        User = get_user_model()
+
+        # Create user A 
+        self.test_pswd = "12345678"
+        self.test_user_a = User.objects.create_user(username="user_a", password=self.test_pswd)
+        self.test_list_a = ToDoList.objects.create(user=self.test_user_a, name="list_a")
+        self.test_list_item_a = ListItem.objects.create(list=self.test_list_a, text="list_item_a")
+
+        # Create User B 
+        self.test_user_b = User.objects.create_user(username="user_b", password=self.test_pswd)
+        self.test_user_b_list = ToDoList.objects.create(user=self.test_user_b, name="list_b")
+        self.test_list_item_b = ListItem.objects.create(list=self.test_user_b_list, text="list_item_b")
+
+        # Create a client 
+        self.client = Client()
+        self.client.login(username= self.test_user_a.username, password = self.test_pswd)
+
+    # Test the cross user access 
+    def test_cross_user_access(self): 
+        
+        reverse_kwargs = {
+            'list_id': self.test_user_b_list.id,
+        }
+
+        response = self.client.get(path=reverse(viewname='view_list_items', kwargs=reverse_kwargs))
+
+        self.assertEqual(response.status_code, 404)
+
+    # Test unauthenticated access 
+    def test_unauthenticated_dashboard_access(self):
+        # Ensure that the client is logged out     
+        self.client.logout()
+
+        # Try access the dashboard while logged out 
+        response = self.client.get(path=reverse('dashboard'))
+
+        self.assertEqual(response.status_code, 302)
+        
+        # (Bonus check: The browser is sent to the login page)
+        self.assertIn(reverse('login'), response.url) 

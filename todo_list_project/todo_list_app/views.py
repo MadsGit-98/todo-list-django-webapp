@@ -59,13 +59,10 @@ def register_view(request):
             registered_password = register_form.cleaned_data.get('password')
 
             # Create a new user in the DB 
-            registered_user = User.objects.create_user(registered_user_name, registered_email, registered_password)
-            
-            # Login the created user 
-            login(request, user=registered_user)
+            User.objects.create_user(registered_user_name, registered_email, registered_password)
 
             # Redirect to the dashboard view to start creating To-Do Lists.
-            return redirect('dashboard')
+            return redirect('login')
     else: 
         register_form = RegisterForm()
         
