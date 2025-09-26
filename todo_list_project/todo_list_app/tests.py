@@ -409,3 +409,34 @@ class UserJourneyText(LiveServerTestCase):
         self.wait.until(EC.url_to_be(dashboard_page_url))
         self.assertEqual(self.web_driver.current_url, dashboard_page_url)
 
+class TestSecurity(TestCase): 
+
+    # setUp Method 
+    def setUp(self):
+        User = get_user_model()
+
+        # Create user A 
+        self.test_pswd = "12345678"
+        self.test_user_a = User.objects.create_user(username="user_a", password=self.test_pswd)
+        self.test_list_a = ToDoList.objects.create(user=self.test_user_a, name="list_a")
+        self.test_list_item_a = ListItem.objects.create(list=self.test_list_a, text="list_item_a")
+
+        # Create User B 
+        self.test_user_b = User.objects.create_user(username="user_b", password=self.test_pswd)
+        self.test_user_b_list = ToDoList.objects.create(user=self.test_user_b, name="list_b")
+        self.test_list_item_b = ListItem.objects.create(list=self.test_user_b_list, text="list_item_b")
+
+        # Create a client 
+        self.client = Client()
+        self.client.login(username= self.test_user_a.username, password = self.test_pswd)
+
+    # Test the cross user access 
+    def test_cross_user_access(self): 
+        
+        reverse_kwargs = {
+            'list_id': self.test_user_b_list.id,
+        }
+
+        response = self.client.get(path=reverse(viewname='view_list_items', kwargs=reverse_kwargs))
+
+        self.assertEqual(response.status_code, 404)
